@@ -3,15 +3,15 @@ export function renderBlock(elementId, html) {
   element.innerHTML = html;
 }
 
-export function renderToast(message, action) {
+export function renderToast(message, action?) {
   let messageText = "";
 
   if (message != null) {
     messageText = `
-    <div id="info-block" class="info-block ${message.type}">
-    <p>${message.text}</p>
-    <button id="toast-main-action">${action?.name || "Закрыть"}</button>
-    </div>
+      <div id="info-block" class="info-block ${message.type}">
+        <p>${message.text}</p>
+        <button id="toast-main-action">${action?.name || "Закрыть"}</button>
+      </div>
     `;
   }
 
@@ -23,7 +23,7 @@ export function renderToast(message, action) {
       if (action != null && action.handler != null) {
         action.handler();
       }
-      renderToast(null, null);
+      renderToast(null);
     };
   }
 }

@@ -1,19 +1,66 @@
 import { renderBlock } from "./lib.js";
 
-export function renderSearchFormBlock(checkInDate: Date, checkOutDate: Date) {
-  const defaultInDate = checkInDate.toLocaleDateString("en-ca");
-  const defaultOutDate = checkOutDate.toLocaleDateString("en-ca");
-  const minInDate = new Date();
-  const maxCalDay = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() + 2,
-    0
-  ).toLocaleDateString("en-ca");
+/*Создать интерфейс SearchFormData, в котором описать структуру для полей поисковой формы.
+ Написать функцию-обработчик формы search, которая собирает заполненные пользователем 
+ данные в формате описанной структуры и передаёт их в функцию поиска. Функция поиска 
+ принимает как аргумент переменную интерфейса SearchFormData, выводит полученный аргумент 
+ в консоль и ничего не возвращает.*/
 
+interface SearchFormData {
+  // city: string,
+  inDate: string;
+  outDate: string;
+  maxPrice: number;
+}
+
+function handlerSearch(data: SearchFormData): void {
+  console.log(
+    `Дата заезда: ${data.inDate}, дата выезда: ${data.outDate} и максимальная цена суток: ${data.maxPrice}`
+  );
+}
+
+export function search() {
+  const form = document.getElementsByTagName("form")[0];
+
+  form.onsubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+
+    const data: SearchFormData = {
+      // city: formData.get('city').toString(),
+      inDate: formData.get("checkin").toString(),
+      outDate: formData.get("checkout").toString(),
+      maxPrice: +formData.get("price"),
+    };
+
+    handlerSearch(data);
+  };
+}
+
+const d = new Date();
+const dateOut = new Date(d.getFullYear(), d.getMonth() + 2, 0);
+const defaultDateIn = new Date(d.setDate(d.getDate() + 1));
+const defaultDateOut = new Date(d.setDate(d.getDate() + 3));
+
+function formattedDate(date) {
+  return [date.getFullYear(), date.getMonth() + 1, date.getDate()]
+    .map((n) => (n < 10 ? `0${n}` : `${n}`))
+    .join("-");
+}
+
+const today = formattedDate(d);
+const maxOutDate = formattedDate(dateOut);
+const defaultIn = formattedDate(defaultDateIn);
+const defaultOut = formattedDate(defaultDateOut);
+
+export function renderSearchFormBlock(
+  dateIn: string = defaultIn,
+  dateOut: string = defaultOut
+) {
   renderBlock(
     "search-form-block",
     `
-    <form>
+    <form id="form">
       <fieldset class="search-filedset">
         <div class="row">
           <div>
@@ -29,32 +76,18 @@ export function renderSearchFormBlock(checkInDate: Date, checkOutDate: Date) {
         <div class="row">
           <div>
             <label for="check-in-date">Дата заезда</label>
-            <input 
-              id="check-in-date" 
-              type="date" 
-              value="${defaultInDate}" 
-              min="${minInDate.toLocaleDateString("en-ca")}" 
-              max="${maxCalDay}" 
-              name="checkin" 
-            />
+            <input id="check-in-date" type="date" value="${dateIn}" min="${today}" max="${maxOutDate}" name="checkin" />
           </div>
           <div>
             <label for="check-out-date">Дата выезда</label>
-            <input 
-              id="check-out-date" 
-              type="date" 
-              value="${defaultOutDate}" 
-              min="${checkOutDate.toLocaleDateString("en-ca")}" 
-              max="${maxCalDay}" 
-              name="checkout" 
-            />
+            <input id="check-out-date" type="date" value="${dateOut}" min="${today}" max="${maxOutDate}" name="checkout" />
           </div>
           <div>
             <label for="max-price">Макс. цена суток</label>
             <input id="max-price" type="text" value="" name="price" class="max-price" />
           </div>
           <div>
-            <div><button>Найти</button></div>
+            <div><button type="submit">Найти</button></div>
           </div>
         </div>
       </fieldset>
