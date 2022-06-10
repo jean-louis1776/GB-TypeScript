@@ -4,11 +4,19 @@ import { renderUserBlock } from "./user.js";
 import { renderToast } from "./lib.js";
 
 window.addEventListener("DOMContentLoaded", () => {
-  renderUserBlock("Pankratova E", "my avatar", 2);
+  renderUserBlock("Wade Warren", "/img/avatar.png", 0);
   renderSearchFormBlock();
   renderSearchStubBlock();
-  // renderToast(
-  //   {text: 'Это пример уведомления. Используйте его при необходимости', type: 'success'},
-  //   {name: 'Понял', handler: () => {console.log('Уведомление закрыто')}}
-  // )
+  renderToast(
+    {
+      text: "Это пример уведомления. Используйте его при необходимости",
+      type: "success",
+    },
+    {
+      name: "Понял",
+      handler: () => {
+        console.log("Уведомление закрыто");
+      },
+    }
+  );
 });
