@@ -4,14 +4,18 @@ export interface Coordinate {
 }
 
 export abstract class MyGraphicsPrimitive2D {
-  pointA: Coordinate;
-  pointB: Coordinate;
+  pointA: Coordinate = { x: 0, y: 0 };
+  pointB: Coordinate = { x: 0, y: 0 };
 
   constructor(a: Coordinate, b?: Coordinate) {
-    this.pointA.x = a.x;
-    this.pointA.y = a.y;
-    this.pointB.x = b.x;
-    this.pointB.y = b.y;
+    if (a != null) {
+      this.pointA.x = a.x;
+      this.pointA.y = a.y;
+    }
+    if (b && b !== null) {
+      this.pointB.x = b.x;
+      this.pointB.y = b.y;
+    }
   }
 
   movePrimitive(n: number): void {
@@ -27,7 +31,7 @@ export abstract class MyAreaPrimitive2D extends MyGraphicsPrimitive2D {
 export class MyCircle extends MyAreaPrimitive2D {
   radius: number;
 
-  constructor(a, r: number) {
+  constructor(a: Coordinate, r: number) {
     super(a);
     this.pointA = a;
     this.radius = r;
